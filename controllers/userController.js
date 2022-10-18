@@ -53,3 +53,22 @@ exports.signup = [
     }
   },
 ];
+
+exports.login = (req, res, next) => {
+  passport.authenticate('local', { session: false }, (err, user, info) => {
+    if (err || !user) {
+      return res
+        .status(400)
+        .json({ message: 'Something went wrong', user: user });
+    }
+
+    req.login(user, { session: false }, (err) => {
+      if (err) {
+        res.send(err);
+      }
+      const body = { _id: user._id, username: user.username };
+      const token = jwt.sign({ user: body }, process.env.SECRET_KEY);
+      return res.status(200).json({ body, token });
+    });
+  })(req, res);
+};

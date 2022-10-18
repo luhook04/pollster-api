@@ -8,7 +8,7 @@ router.get('/', (req, res) => {
 
 // user routes
 router.post('/sign-up', user_controller.signup);
-// router.post('/login', user_controller);
+router.post('/login', user_controller.login);
 // router.post('/logout', user_controller);
 
 // poll routes
