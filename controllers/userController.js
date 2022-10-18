@@ -2,7 +2,7 @@ require('dotenv').config();
 const User = require('../models/user');
 const passport = require('passport');
 const bcrypt = require('bcryptjs');
-const { body, validationResult } = require('exress-validator');
+const { body, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 
 exports.signup = [
