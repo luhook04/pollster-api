@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
+const user_controller = require('../controllers/userController');
 
 router.get('/', (req, res) => {
   res.redirect('/api/polls');
 });
 
 // user routes
-router.post('/sign-up', user_controller);
+router.post('/sign-up', user_controller.signup);
 router.post('/login', user_controller);
 router.post('/logout', user_controller);
 
