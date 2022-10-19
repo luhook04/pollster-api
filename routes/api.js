@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const user_controller = require('../controllers/userController');
+const poll_controller = require('../controllers/pollController');
 
 router.get('/', (req, res) => {
   res.redirect('/api/polls');
@@ -12,6 +13,7 @@ router.post('/login', user_controller.login);
 router.post('/logout', user_controller.logout);
 
 // poll routes
+router.post('/polls', poll_controller.create_poll);
 router.get('/polls', (req, res) => {
   res.send('GET POLLS');
 });

@@ -1,9 +1,9 @@
 require('dotenv').config();
-const User = require('../models/user');
 const passport = require('passport');
 const bcrypt = require('bcryptjs');
 const { body, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
+const User = require('../models/user');
 
 exports.signup = [
   body('username', 'Username required')
@@ -22,6 +22,7 @@ exports.signup = [
     }),
   body('password')
     .isLength({ min: 5 })
+    .trim()
     .withMessage('Password must be 5 characters long'),
   body('confirm-password').custom((value, { req }) => {
     if (value !== req.body.password) {
