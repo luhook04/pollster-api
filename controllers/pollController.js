@@ -1,6 +1,5 @@
 const { body, validationResult } = require('express-validator');
 const Poll = require('../models/poll');
-const Answer = require('../models/answer');
 
 exports.create_poll = [
   body('question')
