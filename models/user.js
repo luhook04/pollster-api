@@ -10,4 +10,7 @@ const UserSchema = new Schema({
   friendRequests: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 });
 
+UserSchema.virtual('url').get(function () {
+  return '/api/users/' + this._id;
+});
 module.exports = mongoose.model('User', UserSchema);
