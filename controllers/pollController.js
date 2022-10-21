@@ -44,7 +44,7 @@ exports.get_polls = async (req, res, next) => {
     const polls = await Poll.find({}).populate('author');
     return res.status(200).json({ polls });
   } catch (err) {
-    return res.status(404).json({ error: err });
+    next(err);
   }
 };
 
@@ -53,6 +53,6 @@ exports.get_my_polls = async (req, res, next) => {
     const myPolls = await Poll.find({ author: req.user._id });
     return res.status(200).json({ myPolls });
   } catch (err) {
-    return;
+    next(err);
   }
 };
