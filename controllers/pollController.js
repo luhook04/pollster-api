@@ -15,6 +15,8 @@ exports.create_poll = [
     .trim()
     .isLength({ min: 1 })
     .withMessage('Must provide two options'),
+  body('option3').trim().optional(),
+  body('option4').trim().optional(),
 
   async (req, res, next) => {
     const errors = validationResult(req);
@@ -25,7 +27,12 @@ exports.create_poll = [
       const poll = new Poll({
         author: req.user._id,
         question: req.body.question,
-        answers: [{ answer: req.body.option1 }, { answer: req.body.option2 }],
+        answers: [
+          { answer: req.body.option1 },
+          { answer: req.body.option2 },
+          { answer: req.body.option3 || null },
+          { answer: req.body.option4 || null },
+        ],
       });
       poll.save((err) => {
         if (err) {

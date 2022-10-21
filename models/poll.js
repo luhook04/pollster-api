@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 const AnswerSchema = new Schema({
   answer: {
     type: String,
-    required: true,
   },
   votes: [
     {
@@ -26,5 +25,11 @@ const PollSchema = mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+
+PollSchema.pre('save', function (next) {
+  this.answers = this.answers.filter((answer) => answer.answer !== null);
+
+  next();
+});
 
 module.exports = mongoose.model('Poll', PollSchema);
