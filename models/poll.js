@@ -6,10 +6,12 @@ const AnswerSchema = new Schema({
     type: String,
     required: true,
   },
-  votes: {
-    type: Number,
-    default: 0,
-  },
+  votes: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
 });
 
 const PollSchema = mongoose.Schema(
@@ -18,7 +20,6 @@ const PollSchema = mongoose.Schema(
     answers: [AnswerSchema],
     question: { type: String, required: true },
     timestamp: { type: Date, default: Date.now },
-    voters: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   },
   {
     toJSON: { virtuals: true },

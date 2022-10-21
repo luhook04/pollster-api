@@ -22,15 +22,21 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   poll_controller.create_poll
 );
-router.get('/polls', poll_controller.get_polls);
+router.get(
+  '/polls',
+  passport.authenticate('jwt', { session: false }),
+  poll_controller.get_polls
+);
 router.get(
   '/mypolls',
   passport.authenticate('jwt', { session: false }),
   poll_controller.get_my_polls
 );
-router.post('/polls', (req, res) => {
-  res.send('POST POLLS');
-});
+router.put(
+  '/polls/:pollId',
+  passport.authenticate('jwt', { session: false }),
+  poll_controller.vote
+);
 router.delete('/polls/:pollId', (req, res) => {
   res.send('Delete Poll');
 });

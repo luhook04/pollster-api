@@ -1,6 +1,5 @@
 const { body, validationResult } = require('express-validator');
 const Poll = require('../models/poll');
-const User = require('../models/user');
 
 exports.create_poll = [
   body('question')
@@ -56,3 +55,5 @@ exports.get_my_polls = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.vote = async (req, res, next) => {};
