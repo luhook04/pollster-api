@@ -33,7 +33,7 @@ router.get(
   poll_controller.get_my_polls
 );
 router.put(
-  '/polls/:pollId',
+  '/polls/:pollId/answers/:answerId',
   passport.authenticate('jwt', { session: false }),
   poll_controller.vote
 );

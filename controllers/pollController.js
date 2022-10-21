@@ -1,4 +1,5 @@
 const { body, validationResult } = require('express-validator');
+const { default: mongoose } = require('mongoose');
 const Poll = require('../models/poll');
 
 exports.create_poll = [
@@ -33,7 +34,7 @@ exports.create_poll = [
         return res.status(200).json({ poll });
       });
     } catch {
-      return res.status(404).json({ err });
+      return next(err);
     }
   },
 ];
@@ -56,4 +57,15 @@ exports.get_my_polls = async (req, res, next) => {
   }
 };
 
-exports.vote = async (req, res, next) => {};
+exports.vote = async (req, res, next) => {
+  try {
+    let poll = await Poll.findById(req.params.pollId);
+    let newVote = req.user._id;
+    let answer = await poll.answers.id(req.params.answerId);
+    answer.votes.push(newVote);
+    poll = await poll.save();
+    return res.status(200).json({ poll, answer, newVote });
+  } catch (err) {
+    next(err);
+  }
+};
