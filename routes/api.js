@@ -3,15 +3,18 @@ const router = express.Router();
 const user_controller = require('../controllers/userController');
 const poll_controller = require('../controllers/pollController');
 const passport = require('passport');
+const poll = require('../models/poll');
 
 router.get('/', (req, res) => {
   res.redirect('/api/polls');
 });
 
-// user routes
+// user register/login routes
 router.post('/sign-up', user_controller.signup);
 router.post('/login', user_controller.login);
 router.post('/logout', user_controller.logout);
+
+// user routes
 
 // poll routes
 router.post(
@@ -19,9 +22,12 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   poll_controller.create_poll
 );
-router.get('/polls', (req, res) => {
-  res.send('GET POLLS');
-});
+router.get('/polls', poll_controller.get_polls);
+router.get(
+  '/mypolls',
+  passport.authenticate('jwt', { session: false }),
+  poll_controller.get_my_polls
+);
 router.post('/polls', (req, res) => {
   res.send('POST POLLS');
 });
