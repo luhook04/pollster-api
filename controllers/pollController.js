@@ -1,5 +1,4 @@
 const { body, validationResult } = require('express-validator');
-const { default: mongoose } = require('mongoose');
 const Poll = require('../models/poll');
 
 exports.create_poll = [
@@ -49,6 +48,7 @@ exports.create_poll = [
 exports.get_polls = async (req, res, next) => {
   try {
     const polls = await Poll.find({}).populate('author');
+    polls.sort((a, b) => b.timestamp - a.timestamp);
     return res.status(200).json({ polls });
   } catch (err) {
     next(err);
@@ -58,6 +58,7 @@ exports.get_polls = async (req, res, next) => {
 exports.get_my_polls = async (req, res, next) => {
   try {
     const myPolls = await Poll.find({ author: req.user._id });
+    myPolls.sort((a, b) => b.timestamp - a.timestamp);
     return res.status(200).json({ myPolls });
   } catch (err) {
     next(err);
@@ -67,11 +68,22 @@ exports.get_my_polls = async (req, res, next) => {
 exports.vote = async (req, res, next) => {
   try {
     let poll = await Poll.findById(req.params.pollId);
+    if (!poll) {
+      return res.status(404).json({ err: 'Post not found' });
+    }
     let newVote = req.user._id;
     let answer = await poll.answers.id(req.params.answerId);
     answer.votes.push(newVote);
     poll = await poll.save();
     return res.status(200).json({ poll, answer, newVote });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.delete_poll = async (req, res, next) => {
+  try {
+    const poll = await Poll.findById(req.params.pollId);
   } catch (err) {
     next(err);
   }
