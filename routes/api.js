@@ -37,8 +37,10 @@ router.put(
   passport.authenticate('jwt', { session: false }),
   poll_controller.vote
 );
-router.delete('/polls/:pollId', (req, res) => {
-  res.send('Delete Poll');
-});
+router.delete(
+  '/polls/:pollId',
+  passport.authenticate('jwt', { session: false }),
+  poll_controller.delete_poll
+);
 
 module.exports = router;

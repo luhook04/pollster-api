@@ -83,7 +83,21 @@ exports.vote = async (req, res, next) => {
 
 exports.delete_poll = async (req, res, next) => {
   try {
-    const poll = await Poll.findById(req.params.pollId);
+    const selectedPoll = await Poll.findById(req.params.pollId);
+    if (!selectedPoll) {
+      return res.status(404).json({ err: 'Poll not found' });
+    }
+    if (selectedPoll.author != req.user._id) {
+      return res
+        .status(401)
+        .json({ message: 'You may only delete your own posts' });
+    }
+    const deletedPost = await Poll.findByIdAndDelete(req.params.pollId);
+    if (deletedPost) {
+      res.status(200).json({
+        msg: `Poll ${req.params.pollId} deleted`,
+      });
+    }
   } catch (err) {
     next(err);
   }
