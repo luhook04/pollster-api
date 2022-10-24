@@ -15,6 +15,21 @@ router.post('/login', user_controller.login);
 router.post('/logout', user_controller.logout);
 
 // user routes
+router.get(
+  '/users',
+  passport.authenticate('jwt', { session: false }),
+  user_controller.get_users
+);
+router.put(
+  '/users/:userId/requests',
+  passport.authenticate('jwt', { session: false }),
+  user_controller.send_friend_request
+);
+router.delete(
+  '/users/:userId/requests/:requestId',
+  passport.authenticate('jwt', { session: false }),
+  user_controller.decline_friend_request
+);
 
 // poll routes
 router.post(

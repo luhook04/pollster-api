@@ -59,7 +59,7 @@ exports.login = (req, res, next) => {
   passport.authenticate('local', { session: false }, (err, user, info) => {
     if (err || !user) {
       return res
-        .status(400)
+        .status(404)
         .json({ message: 'Something went wrong', user: user });
     }
 
@@ -77,4 +77,32 @@ exports.login = (req, res, next) => {
 exports.logout = (req, res) => {
   req.logout();
   res.redirect('/');
+};
+
+exports.send_friend_request = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (user._id == req.user._id) {
+      return res.status(404).json({ err: 'No friending yourself' });
+    }
+    if (user.friendRequests.includes(req.user._id)) {
+      return res.status(404).json({ err: 'No sending multiple requests' });
+    }
+    user.friendRequests.push(req.user._id);
+    const savedUser = await user.save();
+    res.status(200).json({ savedUser });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+exports.decline_friend_request = async (req, res, next) => {};
+
+exports.get_users = async (req, res, next) => {
+  try {
+    const users = await User.find();
+    res.status(200).json({ users });
+  } catch (err) {
+    return next(err);
+  }
 };
