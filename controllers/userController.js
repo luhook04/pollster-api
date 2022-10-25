@@ -116,7 +116,27 @@ exports.decline_friend_request = async (req, res, next) => {
   }
 };
 
-exports.accept_friend_request = async (req, res, next) => {};
+exports.accept_friend_request = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    const request = req.params.requestId;
+    const newFriend = await User.findById(request);
+    if (user._id != req.user._id) {
+      return res
+        .status(404)
+        .json({ err: 'You are not authorized to accept this request' });
+    }
+    const updatedFriendReqs = user.friendRequests.filter(
+      (item) => item._id != request
+    );
+    user.friendRequests = updatedFriendReqs;
+    user.friends.push(newFriend._id);
+    const updatedUser = await user.save();
+    return res.status(200).json({ user: updatedUser });
+  } catch (err) {
+    return next(err);
+  }
+};
 
 exports.get_users = async (req, res, next) => {
   try {

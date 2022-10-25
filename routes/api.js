@@ -30,6 +30,11 @@ router.delete(
   passport.authenticate('jwt', { session: false }),
   user_controller.decline_friend_request
 );
+router.put(
+  '/users/:userId/requests/:requestId',
+  passport.authenticate('jwt', { session: false }),
+  user_controller.accept_friend_request
+);
 
 // poll routes
 router.post(
