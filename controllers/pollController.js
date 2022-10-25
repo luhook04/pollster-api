@@ -94,7 +94,7 @@ exports.delete_poll = async (req, res, next) => {
     }
     const deletedPost = await Poll.findByIdAndDelete(req.params.pollId);
     if (deletedPost) {
-      res.status(200).json({
+      return res.status(200).json({
         msg: `Poll ${req.params.pollId} deleted`,
       });
     }

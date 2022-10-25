@@ -90,18 +90,38 @@ exports.send_friend_request = async (req, res, next) => {
     }
     user.friendRequests.push(req.user._id);
     const savedUser = await user.save();
-    res.status(200).json({ savedUser });
+    return res.status(200).json({ user: savedUser });
   } catch (err) {
     return next(err);
   }
 };
 
-exports.decline_friend_request = async (req, res, next) => {};
+exports.decline_friend_request = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    const request = req.params.requestId;
+    if (user._id != req.user._id && request != req.user._id) {
+      return res.status(404).json({
+        err: 'You are not authorized to delete this request',
+      });
+    }
+    const updatedFriendReqs = user.friendRequests.filter(
+      (item) => item._id != request
+    );
+    user.friendRequests = updatedFriendReqs;
+    const updatedUser = await user.save();
+    return res.status(200).json({ user: updatedUser });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+exports.accept_friend_request = async (req, res, next) => {};
 
 exports.get_users = async (req, res, next) => {
   try {
     const users = await User.find();
-    res.status(200).json({ users });
+    return res.status(200).json({ users });
   } catch (err) {
     return next(err);
   }
