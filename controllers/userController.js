@@ -158,6 +158,17 @@ exports.delete_friend = async (req, res, next) => {
   }
 };
 
+exports.get_user = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.userId)
+      .populate('friends')
+      .populate('friendRequests');
+    return res.status(200).json({ user });
+  } catch (err) {
+    return next(err);
+  }
+};
+
 exports.get_users = async (req, res, next) => {
   try {
     const users = await User.find();

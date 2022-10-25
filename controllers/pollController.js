@@ -1,5 +1,6 @@
 const { body, validationResult } = require('express-validator');
 const Poll = require('../models/poll');
+const User = require('../models/user');
 
 exports.create_poll = [
   body('question')
@@ -62,6 +63,17 @@ exports.get_my_polls = async (req, res, next) => {
     return res.status(200).json({ myPolls });
   } catch (err) {
     next(err);
+  }
+};
+
+exports.get_feed = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id);
+    const feed = await Poll.find({ author: [req.user._id, ...user.friends] });
+    feed.sort((a, b) => b.timestamp - a.timestamp);
+    return res.status(200).json({ feed });
+  } catch (err) {
+    return next(err);
   }
 };
 
