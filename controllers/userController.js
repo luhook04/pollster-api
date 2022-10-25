@@ -138,6 +138,26 @@ exports.accept_friend_request = async (req, res, next) => {
   }
 };
 
+exports.delete_friend = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    const friend = await User.findById(req.params.friendId);
+    if (user._id != req.user._id) {
+      return res
+        .status(404)
+        .json({ err: 'You are not authorized to delete this friend' });
+    }
+    const updatedFriends = user.friends.filter((item) => {
+      item._id != friend._id;
+    });
+    user.friends = updatedFriends;
+    const updatedUser = await user.save();
+    return res.status(200).json({ updatedUser });
+  } catch (err) {
+    return next(err);
+  }
+};
+
 exports.get_users = async (req, res, next) => {
   try {
     const users = await User.find();
