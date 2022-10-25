@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const { body, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const Poll = require('../models/poll');
 
 exports.signup = [
   body('username', 'Username required')
@@ -163,7 +164,9 @@ exports.get_user = async (req, res, next) => {
     const user = await User.findById(req.params.userId)
       .populate('friends')
       .populate('friendRequests');
-    return res.status(200).json({ user });
+    const userPolls = await Poll.find({ author: req.params.userId });
+    userPolls.sort((a, b) => b.timestamp - a.timestamp);
+    return res.status(200).json({ user, userPolls });
   } catch (err) {
     return next(err);
   }

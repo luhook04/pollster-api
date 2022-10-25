@@ -56,7 +56,7 @@ exports.get_polls = async (req, res, next) => {
   }
 };
 
-exports.get_my_polls = async (req, res, next) => {
+exports.get_user_polls = async (req, res, next) => {
   try {
     const myPolls = await Poll.find({ author: req.user._id });
     myPolls.sort((a, b) => b.timestamp - a.timestamp);
