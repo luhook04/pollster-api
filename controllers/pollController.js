@@ -35,9 +35,11 @@ exports.create_poll = [
         ],
       });
       const savedPoll = await poll.save();
-      const relPoll = await Poll.findById(savedPoll._id).populate('author');
-      if (relPoll) {
-        return res.status(200).json({ post: relPoll });
+      const user = await User.findById(req.user._id);
+      user.polls.push(savedPoll._id);
+      const updatedUser = await user.save();
+      if (savedPoll) {
+        return res.status(200).json({ post: savedPoll, user: updatedUser });
       }
     } catch {
       return next(err);
@@ -50,16 +52,6 @@ exports.get_polls = async (req, res, next) => {
     const polls = await Poll.find({}).populate('author');
     polls.sort((a, b) => b.timestamp - a.timestamp);
     return res.status(200).json({ polls });
-  } catch (err) {
-    next(err);
-  }
-};
-
-exports.get_user_polls = async (req, res, next) => {
-  try {
-    const myPolls = await Poll.find({ author: req.user._id });
-    myPolls.sort((a, b) => b.timestamp - a.timestamp);
-    return res.status(200).json({ myPolls });
   } catch (err) {
     next(err);
   }
