@@ -34,12 +34,11 @@ exports.create_poll = [
           { answer: req.body.option4 || null },
         ],
       });
-      poll.save((err) => {
-        if (err) {
-          return next(err);
-        }
-        return res.status(200).json({ poll });
-      });
+      const savedPoll = await poll.save();
+      const relPoll = await Poll.findById(savedPoll._id).populate('author');
+      if (relPoll) {
+        return res.status(200).json({ post: relPoll });
+      }
     } catch {
       return next(err);
     }
