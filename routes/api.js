@@ -3,7 +3,6 @@ const router = express.Router();
 const user_controller = require('../controllers/userController');
 const poll_controller = require('../controllers/pollController');
 const passport = require('passport');
-const poll = require('../models/poll');
 
 router.get('/', (req, res) => {
   res.redirect('/api/polls');
@@ -57,7 +56,6 @@ router.get(
   passport.authenticate('jwt', { session: false }),
   poll_controller.get_polls
 );
-
 router.put(
   '/polls/:pollId/answers/:answerId',
   passport.authenticate('jwt', { session: false }),
