@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const { DateTime } = require('luxon');
 
 const AnswerSchema = new Schema({
   answer: {
@@ -25,6 +26,10 @@ const PollSchema = mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+
+PollSchema.virtual('date').get(function () {
+  return DateTime.fromJSDate(this.timestamp).toLocaleString(DateTime.DATE_MED);
+});
 
 PollSchema.pre('save', function (next) {
   this.answers = this.answers.filter((answer) => answer.answer !== null);

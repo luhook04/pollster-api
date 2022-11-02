@@ -19,10 +19,16 @@ router.get(
   passport.authenticate('jwt', { session: false }),
   user_controller.get_users
 );
+
 router.get(
   '/users/:userId',
   passport.authenticate('jwt', { session: false }),
   user_controller.get_user
+);
+router.delete(
+  '/users/:userId',
+  passport.authenticate('jwt', { session: false }),
+  user_controller.delete_account
 );
 router.put(
   '/users/:userId/requests',

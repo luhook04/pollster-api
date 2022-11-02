@@ -51,20 +51,10 @@ exports.get_polls = async (req, res, next) => {
   try {
     const polls = await Poll.find({}).populate('author');
     polls.sort((a, b) => b.timestamp - a.timestamp);
+
     return res.status(200).json({ polls });
   } catch (err) {
     next(err);
-  }
-};
-
-exports.get_feed = async (req, res, next) => {
-  try {
-    const user = await User.findById(req.user._id);
-    const feed = await Poll.find({ author: [req.user._id, ...user.friends] });
-    feed.sort((a, b) => b.timestamp - a.timestamp);
-    return res.status(200).json({ feed });
-  } catch (err) {
-    return next(err);
   }
 };
 
@@ -93,7 +83,7 @@ exports.delete_poll = async (req, res, next) => {
     if (selectedPoll.author != req.user._id) {
       return res
         .status(401)
-        .json({ message: 'You may only delete your own posts' });
+        .json({ message: 'You may only delete your own polls' });
     }
     const deletedPost = await Poll.findByIdAndDelete(req.params.pollId);
     if (deletedPost) {

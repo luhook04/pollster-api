@@ -15,9 +15,9 @@ const shuffleArray = (arr) => {
   return array;
 };
 
-const generateUser = () => {
+const generateUser = (i) => {
   const user = new User({
-    username: faker.internet.username(),
+    username: `testuser${i}`,
     password: faker.internet.password(),
     profilePicUrl: faker.image.imageUrl(),
     polls: [],
@@ -27,31 +27,31 @@ const generateUser = () => {
   users.push(user);
 };
 
-const generateFriends = () => {
-  users.forEach((user) => {
-    const potentialFriends = users.filter((item) => item._id != user._id);
-    const shuffledUsers = shuffleArray(potentialFriends);
-    const randUsers = shuffledUsers.slice(0, 1);
-    user.friends = randUsers.map((user) => user._id);
-    user.friends.forEach((friendedUser) => {
-      const relIndex = users.findIndex((user) => user._id == friendedUser);
-      if (!users[relIndex].friends.includes(user._id)) {
-        users[relIndex].frineds.push(user._id);
-      }
-    });
-  });
-};
+// const generateFriends = () => {
+//   users.forEach((user) => {
+//     const potentialFriends = users.filter((item) => item._id != user._id);
+//     const shuffledUsers = shuffleArray(potentialFriends);
+//     const randUsers = shuffledUsers.slice(0, 1);
+//     user.friends = randUsers.map((user) => user._id);
+//     user.friends.forEach((friendedUser) => {
+//       const relIndex = users.findIndex((user) => user._id == friendedUser);
+//       if (!users[relIndex].friends.includes(user._id)) {
+//         users[relIndex].friends.push(user._id);
+//       }
+//     });
+//   });
+// };
 
-const generateFriendRequests = () => {
-  users.forEach((user) => {
-    const potentialFriendReqs = users.filter((item) => {
-      item._id != user._id && !user.friends.includes(item);
-    });
-    const shuffledRequests = shuffleArray(potentialFriendReqs);
-    const randUsers = shuffledRequests.slice(0, 1);
-    user.friendRequests = randUsers.map((user) => user._id);
-  });
-};
+// const generateFriendRequests = () => {
+//   users.forEach((user) => {
+//     const potentialFriendReqs = users.filter((item) => {
+//       item._id != user._id && !user.friends.includes(item);
+//     });
+//     const shuffledRequests = shuffleArray(potentialFriendReqs);
+//     const randUsers = shuffledRequests.slice(0, 1);
+//     user.friendRequests = randUsers.map((user) => user._id);
+//   });
+// };
 
 const generatePoll = (user) => {
   const poll = new Poll({
@@ -79,19 +79,19 @@ const addVotes = () => {
   polls.forEach((poll) => {
     poll.author.friends.forEach((friend) => {
       if (Math.random() > 0.5) {
-        poll.answers[1].vote.push(friend._id);
-      } else poll.answers[0].vote.push(friend._id);
+        poll.answers[1].votes.push(friend._id);
+      } else poll.answers[0].votes.push(friend._id);
     });
   });
 };
 
 const seedDB = () => {
-  for (let i = 0; i < 100; i++) {
-    generateUser();
+  for (let i = 0; i < 30; i++) {
+    generateUser(i);
   }
 
-  generateFriendRequests();
-  generateFriends();
+  // generateFriendRequests();
+  // generateFriends();
   addPolls();
   addVotes();
 
@@ -110,10 +110,8 @@ const seedDB = () => {
       return err;
     }
   });
-  console.log({ users, posts });
+
   return { users, polls };
 };
-
-seedDB();
 
 module.exports = seedDB;
