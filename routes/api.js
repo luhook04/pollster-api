@@ -57,7 +57,11 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   poll_controller.create_poll
 );
-router.get('/polls', poll_controller.get_polls);
+router.get(
+  '/polls',
+  passport.authenticate('jwt', { session: false }),
+  poll_controller.get_polls
+);
 
 router.put(
   '/polls/:pollId/answers/:answerId',
