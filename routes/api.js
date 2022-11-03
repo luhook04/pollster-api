@@ -5,7 +5,7 @@ const poll_controller = require('../controllers/pollController');
 const passport = require('passport');
 
 router.get('/', (req, res) => {
-  res.redirect('/api/polls');
+  res.redirect('/login');
 });
 
 // user register/login routes
