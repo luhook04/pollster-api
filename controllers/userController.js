@@ -191,7 +191,19 @@ exports.delete_account = async (req, res, next) => {
         err: `You don't have authorization to delete this account`,
       });
     }
+    const deletePosts = await Poll.deleteMany({ author: req.user._id });
     const deletedUser = await User.findByIdAndDelete(req.params.userId);
+    const otherUsers = await User.find({ _id: { $ne: req.user._id } });
+
+    for (user of otherUsers) {
+      const updatedFriends = user.friends.filter((id) => id !== req.user._id);
+      const updatedFriendReqs = user.friendRequests.filter(
+        (id) => id !== req.user._id
+      );
+      user.friends = updatedFriends;
+      user.friendRequests = updatedFriendReqs;
+      await user.save();
+    }
     if (deletedUser) {
       req.logout();
       res.redirect('/');
