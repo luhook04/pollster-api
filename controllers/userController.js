@@ -174,6 +174,20 @@ exports.get_user = async (req, res, next) => {
   }
 };
 
+exports.get_account = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id)
+      .populate('friends')
+      .populate('friendRequests')
+      .populate('polls');
+    const userPolls = await Poll.find({ author: req.user._id });
+    userPolls.sort((a, b) => b.timestamp - a.timestamp);
+    return res.status(200).json({ user, userPolls });
+  } catch (err) {
+    return next(err);
+  }
+};
+
 exports.get_users = async (req, res, next) => {
   try {
     const users = await User.find({});
