@@ -162,13 +162,18 @@ exports.delete_friend = async (req, res, next) => {
 
 exports.get_user = async (req, res, next) => {
   try {
-    const user = await User.findById(req.params.userId)
-      .populate('friends', '-password')
-      .populate('friendRequests', '-password')
-      .populate('polls');
-    const userPolls = await Poll.find({ author: req.params.userId });
-    userPolls.sort((a, b) => b.timestamp - a.timestamp);
-    return res.status(200).json({ user, userPolls });
+    if (req.params.id == req.user._id) {
+      const user = await User.findById(req.params.userId)
+        .populate('friends', '-password')
+        .populate('friendRequests', '-password')
+        .populate('polls', { sort: { timestamp: -1 } });
+      return res.status(200).json({ user });
+    } else {
+      const user = await User.findById(req.params.userId).populate('polls', {
+        sort: { timestamp: -1 },
+      });
+      return res.status(200).json({ user });
+    }
   } catch (err) {
     return next(err);
   }
