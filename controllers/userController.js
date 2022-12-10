@@ -168,7 +168,9 @@ exports.get_user = async (req, res, next) => {
         .populate('friendRequests', '-password')
         .populate('polls', { sort: { timestamp: -1 } });
       return res.status(200).json({ user });
-    } else {
+    } else if (req.params.id != req.user._id) {
+      console.log(req.params.id === req.user._id);
+      console.log(req.params.id == req.user._id);
       const user = await User.findById(req.params.userId).populate('polls', {
         sort: { timestamp: -1 },
       });
