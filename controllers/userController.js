@@ -172,7 +172,9 @@ exports.get_user = async (req, res, next) => {
       const user = await User.findById(req.params.userId).populate('polls', {
         sort: { timestamp: -1 },
       });
-      return res.status(200).json({ user, boo: 'fh' });
+      return res
+        .status(200)
+        .json({ user, me: req.user._id, other: req.params.userId });
     }
   } catch (err) {
     return next(err);
