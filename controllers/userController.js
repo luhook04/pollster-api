@@ -164,6 +164,7 @@ exports.get_user = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.userId)
       .populate('friends', '-password')
+      .populate('friendRequests', '-password')
       .populate('polls');
     const userPolls = await Poll.find({ author: req.params.userId });
     userPolls.sort((a, b) => b.timestamp - a.timestamp);
