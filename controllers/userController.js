@@ -163,8 +163,7 @@ exports.delete_friend = async (req, res, next) => {
 exports.get_user = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.userId)
-      .populate('friends')
-      .populate('friendRequests')
+      .populate('friends', '-password')
       .populate('polls');
     const userPolls = await Poll.find({ author: req.params.userId });
     userPolls.sort((a, b) => b.timestamp - a.timestamp);
