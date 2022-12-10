@@ -175,7 +175,7 @@ exports.get_self = async (req, res, next) => {
     const user = await User.findById(req.user._id)
       .populate('friends', '-password')
       .populate('friendRequests', '-password')
-      .populate('polls', { sort: { timestamp: -1 } });
+      .populate('polls');
     return res.status(200).json({ user });
   } catch (err) {
     return next(err);

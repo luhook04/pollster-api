@@ -55,7 +55,7 @@ exports.get_polls = async (req, res, next) => {
       author: [req.user._id, ...loggedUser.friends],
     }).populate('author', '-password');
     polls.sort((a, b) => b.timestamp - a.timestamp);
-    console.log('hi');
+
     return res.status(200).json({ polls });
   } catch (err) {
     next(err);
