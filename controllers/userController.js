@@ -162,9 +162,7 @@ exports.delete_friend = async (req, res, next) => {
 
 exports.get_user = async (req, res, next) => {
   try {
-    const user = await User.findById(req.params.userId).populate('polls', {
-      sort: { timestamp: -1 },
-    });
+    const user = await User.findById(req.params.userId);
     return res.status(200).json({ user });
   } catch (err) {
     return next(err);
@@ -174,8 +172,7 @@ exports.get_self = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id)
       .populate('friends', '-password')
-      .populate('friendRequests', '-password')
-      .populate('polls');
+      .populate('friendRequests', '-password');
     return res.status(200).json({ user });
   } catch (err) {
     return next(err);

@@ -50,7 +50,6 @@ exports.create_poll = [
 exports.get_polls = async (req, res, next) => {
   try {
     const loggedUser = await User.findById(req.user._id);
-
     const polls = await Poll.find({
       author: [req.user._id, ...loggedUser.friends],
     }).populate('author', '-password');
