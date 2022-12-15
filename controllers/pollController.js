@@ -64,6 +64,7 @@ exports.get_polls = async (req, res, next) => {
 exports.vote = async (req, res, next) => {
   try {
     let poll = await Poll.findById(req.params.pollId);
+    console.log(poll);
     if (!poll) {
       return res.status(404).json({ err: 'Post not found' });
     }
