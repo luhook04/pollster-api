@@ -67,6 +67,12 @@ exports.vote = async (req, res, next) => {
     if (!poll) {
       return res.status(404).json({ err: 'Post not found' });
     }
+    if (poll.answers.includes(req.user._id)) {
+      return res.status(404).json({ err: "Can't vote twice" });
+    }
+    if (poll.author._id === req.user._id) {
+      return res.status(404).json({ err: "Can't vote on your own poll" });
+    }
     let newVote = req.user._id;
     let answer = await poll.answers.id(req.params.answerId);
     answer.votes.push(newVote);
