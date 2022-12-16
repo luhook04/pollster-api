@@ -25,7 +25,7 @@ exports.create_poll = [
     }
     try {
       const poll = new Poll({
-        author: req.user._id,
+        author: { id: req.user._id, username: req.user.username },
         question: req.body.question,
         answers: [
           { answer: req.body.option1 },
@@ -39,7 +39,7 @@ exports.create_poll = [
       user.polls.push(savedPoll._id);
       const updatedUser = await user.save();
       if (savedPoll) {
-        return res.status(200).json({ post: savedPoll, user: updatedUser });
+        return res.status(200).json({ poll: savedPoll, user: updatedUser });
       }
     } catch {
       return next(err);
