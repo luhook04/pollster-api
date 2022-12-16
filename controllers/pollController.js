@@ -25,7 +25,7 @@ exports.create_poll = [
     }
     try {
       const poll = new Poll({
-        author: { id: req.user._id, username: req.user.username },
+        author: req.user._id,
         question: req.body.question,
         answers: [
           { answer: req.body.option1 },
