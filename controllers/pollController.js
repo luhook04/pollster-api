@@ -91,8 +91,7 @@ exports.delete_poll = async (req, res, next) => {
     const selectedPoll = await Poll.findById(req.params.pollId);
     const author = await User.findById(req.user._id);
     const newPollList = author.polls.filter((id) => id !== selectedPoll._id);
-    console.log(newPollList);
-    console.log(author.polls);
+
     author.polls = newPollList;
     await author.save();
 
