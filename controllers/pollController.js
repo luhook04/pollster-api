@@ -101,8 +101,9 @@ exports.delete_poll = async (req, res, next) => {
     const deletedPost = await Poll.findByIdAndDelete(req.params.pollId);
     if (deletedPost) {
       const author = await User.findById(req.user._id);
-      author.polls.filter((id) => id !== selectedPoll._id);
-      const updatedAuthor = author.save();
+      const newPollList = author.polls.filter((id) => id !== selectedPoll._id);
+      author.polls = newPollList;
+      await author.save();
       return res.status(200).json({
         msg: `Poll ${req.params.pollId} deleted`,
         updatedAuthor,
