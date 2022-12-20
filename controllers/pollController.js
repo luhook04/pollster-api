@@ -90,8 +90,7 @@ exports.delete_poll = async (req, res, next) => {
   try {
     const selectedPoll = await Poll.findById(req.params.pollId);
     const author = await User.findById(req.user._id);
-    author.polls.filter(!selectedPoll);
-    await author.save();
+    console.log(author.polls);
 
     if (!selectedPoll) {
       return res.status(404).json({ err: 'Poll not found' });
