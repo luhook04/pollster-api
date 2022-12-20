@@ -89,6 +89,10 @@ exports.vote = async (req, res, next) => {
 exports.delete_poll = async (req, res, next) => {
   try {
     const selectedPoll = await Poll.findById(req.params.pollId);
+    const author = await User.findById(req.user._id);
+    author.polls.filter(!selectedPoll);
+    await author.save();
+
     if (!selectedPoll) {
       return res.status(404).json({ err: 'Poll not found' });
     }
