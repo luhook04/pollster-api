@@ -84,6 +84,12 @@ exports.logout = (req, res) => {
 exports.send_friend_request = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.userId);
+    const self = await User.findById(req.user._id);
+    if (self.friendRequests.includes(user._id)) {
+      return res
+        .status(404)
+        .json({ err: 'This user has already sent a friend request to you' });
+    }
     if (user._id == req.user._id) {
       return res.status(404).json({ err: 'No friending yourself' });
     }
