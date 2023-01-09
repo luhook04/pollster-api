@@ -137,10 +137,17 @@ exports.accept_friend_request = async (req, res, next) => {
     const updatedFriendReqs = user.friendRequests.filter(
       (item) => item._id != request
     );
+
+    const friendUpdatedRequests = newFriend.friendRequests.filter(
+      (item) => item._id != req.user._id
+    );
     user.friendRequests = updatedFriendReqs;
     user.friends.push(newFriend._id);
+    newFriend.friendRequests = friendUpdatedRequests;
+    newFriend.friends.push(req.user._id);
     const updatedUser = await user.save();
-    return res.status(200).json({ user: updatedUser });
+    const updatedFriend = await newFriend.save();
+    return res.status(200).json({ user: updatedUser, friend: updatedFriend });
   } catch (err) {
     return next(err);
   }
