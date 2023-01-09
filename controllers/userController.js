@@ -165,9 +165,14 @@ exports.delete_friend = async (req, res, next) => {
     const updatedFriends = user.friends.filter((item) => {
       item._id != friend._id;
     });
+    const friendsUpdatedList = friend.friends.filter((item) => {
+      item._id != user._id;
+    });
     user.friends = updatedFriends;
+    friend.friends = friendsUpdatedList;
+    const updatedFriend = await friend.save();
     const updatedUser = await user.save();
-    return res.status(200).json({ updatedUser });
+    return res.status(200).json({ updatedUser, updatedFriend });
   } catch (err) {
     return next(err);
   }
