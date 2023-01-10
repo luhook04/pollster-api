@@ -80,6 +80,7 @@ exports.vote = async (req, res, next) => {
     // if (poll.answers.id(req.params.answerId).votes.includes(req.user._id)) {
     //   return res.status(404).send({ message: "Can't vote twice" });
     // }
+
     if (poll.author._id == req.user._id) {
       return res.status(404).send({ message: "Can't vote on your own poll" });
     }
