@@ -70,9 +70,16 @@ exports.vote = async (req, res, next) => {
     if (!poll) {
       return res.status(404).json({ err: 'Post not found' });
     }
-    if (poll.answers.id(req.params.answerId).votes.includes(req.user._id)) {
-      return res.status(404).send({ message: "Can't vote twice" });
-    }
+
+    poll.answers.map((answer) => {
+      if (answer.votes.includes(req.user._id)) {
+        return res.status(404).json({ message: "Can't vote twice" });
+      }
+    });
+
+    // if (poll.answers.id(req.params.answerId).votes.includes(req.user._id)) {
+    //   return res.status(404).send({ message: "Can't vote twice" });
+    // }
     if (poll.author._id == req.user._id) {
       return res.status(404).send({ message: "Can't vote on your own poll" });
     }
