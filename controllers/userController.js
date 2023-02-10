@@ -69,7 +69,14 @@ exports.login = (req, res, next) => {
       if (err) {
         return next(err);
       }
-      const body = { _id: user._id, username: user.username };
+      const body = {
+        _id: user._id,
+        username: user.username,
+        profilePicUrl: user.profilePicUrl,
+        polls: user.polls,
+        friends: user.friends,
+        friendRequests: user.friendRequests,
+      };
       const token = jwt.sign({ user: body }, process.env.SECRET_KEY);
       return res.status(200).json({ body, token });
     });
