@@ -5,6 +5,7 @@ const { body, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const Poll = require('../models/poll');
+const { path } = require('../app');
 
 exports.signup = [
   body('username', 'Username required')
@@ -187,7 +188,15 @@ exports.delete_friend = async (req, res, next) => {
 
 exports.get_user = async (req, res, next) => {
   try {
-    const user = await User.findById(req.params.userId).populate('polls');
+    const user = await User.findById(req.params.userId)
+      .populate('polls')
+      .populate({
+        path: 'polls',
+        populate: {
+          path: 'author',
+          model: 'User',
+        },
+      });
 
     return res.status(200).json({ user });
   } catch (err) {
