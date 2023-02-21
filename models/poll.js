@@ -32,6 +32,12 @@ PollSchema.virtual('date').get(function () {
   return DateTime.fromJSDate(this.timestamp).toLocaleString(DateTime.DATE_MED);
 });
 
+PollSchema.virtual('time').get(function () {
+  return DateTime.fromJSDate(this.timestamp).toLocaleString(
+    DateTime.TIME_SIMPLE
+  );
+});
+
 PollSchema.pre('save', function (next) {
   this.answers = this.answers.filter((answer) => answer.answer !== null);
 
