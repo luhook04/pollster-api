@@ -52,7 +52,9 @@ exports.get_polls = async (req, res, next) => {
     const loggedUser = await User.findById(req.user._id);
     const polls = await Poll.find({
       author: [req.user._id, ...loggedUser.friends],
-    }).populate('author', '-password');
+    })
+      .select('-timestamp')
+      .populate('author', '-password');
     polls.sort((a, b) => b.timestamp - a.timestamp);
 
     return res.status(200).json({ polls });
