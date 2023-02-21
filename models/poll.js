@@ -2,18 +2,21 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const { DateTime } = require('luxon');
 
-const AnswerSchema = new Schema({
-  answer: {
-    type: String,
-  },
-  votes: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
+const AnswerSchema = new Schema(
+  {
+    answer: {
+      type: String,
     },
-  ],
-});
+    votes: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+      },
+    ],
+  },
+  { id: false }
+);
 
 const PollSchema = mongoose.Schema(
   {
