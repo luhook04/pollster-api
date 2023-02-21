@@ -218,7 +218,7 @@ exports.get_self = async (req, res, next) => {
 
 exports.get_users = async (req, res, next) => {
   try {
-    const users = await User.find({});
+    const users = await User.find({}).select('-password');
     return res.status(200).json({ users });
   } catch (err) {
     return next(err);
