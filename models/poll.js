@@ -22,11 +22,11 @@ const PollSchema = mongoose.Schema(
     question: { type: String, required: true },
     timestamp: { type: Date, default: Date.now },
   },
-  { id: false },
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
-  }
+  },
+  { id: false }
 );
 
 PollSchema.virtual('date').get(function () {
