@@ -188,7 +188,9 @@ exports.delete_friend = async (req, res, next) => {
 
 exports.get_user = async (req, res, next) => {
   try {
-    const user = await User.findById(req.params.userId).populate('polls');
+    const user = await User.findById(req.params.userId)
+      .populate('polls')
+      .select('-password');
     const polls = await Poll.find({
       author: [req.params.userId],
     }).populate('author', '-password');
