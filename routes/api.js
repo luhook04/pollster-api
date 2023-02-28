@@ -39,6 +39,11 @@ router.put(
   passport.authenticate('jwt', { session: false }),
   user_controller.send_friend_request
 );
+router.post(
+  '/users/:userId/image',
+  passport.authenticate('jwt', { session: false }),
+  user_controller.update_profile_pic
+);
 router.delete(
   '/users/:userId/requests/:requestId',
   passport.authenticate('jwt', { session: false }),

@@ -5,7 +5,7 @@ const { body, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const Poll = require('../models/poll');
-const { path } = require('../app');
+const { upload } = require('../config/multer');
 
 exports.signup = [
   body('username', 'Username required')
@@ -184,6 +184,51 @@ exports.delete_friend = async (req, res, next) => {
   } catch (err) {
     return next(err);
   }
+};
+
+exports.update_profile_pic = (req, res, next) => {
+  body('imageFile')
+    .custom((value, { req }) => {
+      if (!req.file) {
+        return 'No image';
+      } else if (
+        req.file.mimetype === 'image/bmp' ||
+        req.file.mimetype === 'image/gif' ||
+        req.file.mimetype === 'image/jpeg' ||
+        req.file.mimetype === 'image/png' ||
+        req.file.mimetype === 'image/tiff' ||
+        req.file.mimetype === 'image/webp'
+      ) {
+        return 'image';
+      } else {
+        return false;
+      }
+    })
+    .withMessage('You may only submit image files.'),
+    upload.single('profilePic')(req, res, async function (err) {
+      if (err) {
+        return res.status(400).json({ error: err.message });
+      }
+      try {
+        const user = await User.findById(req.params.userId);
+        if (!user) {
+          return res.status(404).send({ error: 'User not found' });
+        } else if (req.params.userId !== req.user._id) {
+          return res.status(404).send({
+            error:
+              "You aren't authorized to change this user's profile picture",
+          });
+        } else if (!req.file) {
+          return res.status(400).send({ message: 'No file provided' });
+        }
+        user.profilePicUrl = req.file.filename;
+        await user.save();
+        return res.status(200).json({ user });
+      } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    });
 };
 
 exports.get_user = async (req, res, next) => {
