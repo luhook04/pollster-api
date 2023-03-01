@@ -223,7 +223,7 @@ exports.update_profile_pic = (req, res, next) => {
         }
         user.profilePicUrl = req.file.filename;
         await user.save();
-        return res.status(200).json({ user });
+        return res.status(200).json({ user, file: req.file });
       } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal server error' });

@@ -4,9 +4,9 @@ const user_controller = require('../controllers/userController');
 const poll_controller = require('../controllers/pollController');
 const passport = require('passport');
 
-router.get('/', (req, res) => {
-  res.redirect('/api/polls');
-});
+// router.get('/', (req, res) => {
+//   res.redirect('/api/polls');
+// });
 
 // user register/login routes
 router.post('/sign-up', user_controller.signup);
@@ -39,11 +39,13 @@ router.put(
   passport.authenticate('jwt', { session: false }),
   user_controller.send_friend_request
 );
+
 router.post(
   '/users/:userId/image',
   passport.authenticate('jwt', { session: false }),
   user_controller.update_profile_pic
 );
+
 router.delete(
   '/users/:userId/requests/:requestId',
   passport.authenticate('jwt', { session: false }),

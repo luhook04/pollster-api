@@ -16,6 +16,10 @@ const app = express();
 const indexRouter = require('./routes/index');
 const apiRouter = require('./routes/api');
 
+helmet({
+  crossOriginResourcePolicy: false,
+});
+
 app.use(compression());
 app.use(helmet());
 app.use(cors());
@@ -24,7 +28,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use('/img', express.static(path.join(__dirname, 'public/images')));
+app.use('/js', express.static(path.join(__dirname, 'public/javascripts')));
+app.use('/css', express.static(path.join(__dirname, 'public/stylesheets')));
 app.use('/', indexRouter);
 app.use('/api', apiRouter);
 
