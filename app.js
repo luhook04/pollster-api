@@ -16,12 +16,12 @@ const app = express();
 const indexRouter = require('./routes/index');
 const apiRouter = require('./routes/api');
 
-helmet({
-  crossOriginResourcePolicy: false,
-});
-
 app.use(compression());
-app.use(helmet());
+app.use(
+  helmet({
+    crossOriginResourcePolicy: false,
+  })
+);
 app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
