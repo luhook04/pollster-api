@@ -7,7 +7,7 @@ const UserSchema = new Schema({
   profilePicUrl: {
     type: String,
     required: true,
-    default: '../public/images/alien.svg',
+    default: 'alien.svg',
   },
   polls: [{ type: Schema.Types.ObjectId, ref: 'Poll' }],
   friends: [{ type: Schema.Types.ObjectId, ref: 'User' }],
