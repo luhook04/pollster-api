@@ -287,7 +287,6 @@ exports.delete_account = async (req, res, next) => {
       user.friendRequests = updatedFriendReqs;
       await user.save();
     }
-
     req.logout();
     res.redirect('/');
     return res.status(200).json({
