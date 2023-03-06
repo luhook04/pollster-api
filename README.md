@@ -18,4 +18,4 @@ This project is the api portion of a social media web application. The app consi
   - Luxon
   - Helmet
   - Bycrypt
-  - dotenv
+  - SuperTest
